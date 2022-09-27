@@ -1,0 +1,42 @@
+{
+  "tableColumns": {
+  },
+  "lookup": {
+    "roles": [
+      {
+        "roleId": "1",
+        "name": "Admin"
+      },
+      {
+        "roleId": "2",
+        "name": "Front desk"
+      }]
+  },
+  "apiEndPoints": {
+    "auth": {
+      "login": {
+        "staff": "auth/login/staff",
+        "tenant": "auth/login/tenant"
+      },
+      "logout": "auth/logout",
+      "register": {
+        "tenant": "auth/register/tenant",
+        "staff": "auth/register/staff"
+      },
+      "findByUsername": "auth/findByUsername/",
+      "refreshToken": "auth/refresh-token"
+    },
+    "user": {
+      "get": "users?userTypeId=",
+      "getStaffByAdvanceSearch": "users/getStaffByAdvanceSearch",
+      "getTenantByAdvanceSearch": "users/getTenantByAdvanceSearch",
+      "getById": "users/",
+      "createStaff": "users/staff",
+      "createTenant": "users/tenant",
+      "udpdateTenant": "users/tenant",
+      "udpdateStaff": "users/staff",
+      "toggleEnable": "users/toggleEnable"
+    },
+    "role": "roles/"
+  }
+}
