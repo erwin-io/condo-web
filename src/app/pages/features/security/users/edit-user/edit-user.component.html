@@ -1,7 +1,7 @@
 <div class="page-view-container" fxFlex="100" fxLayout="column" fxLayoutGap="10px">
   <mat-card>
     <mat-card-header>
-      <mat-card-subtitle>Edit User</mat-card-subtitle>
+      <mat-card-subtitle>Edit</mat-card-subtitle>
     </mat-card-header>
 
     <mat-card-content fxLayout="column" >
@@ -50,7 +50,37 @@
                     }}</mat-error>
                 </mat-form-field>
               </div>
+              <div fxFlex="100" fxLayout="column" fxLayout.gt-sm="row" *ngIf="!isLoading && userData.user.userType.userTypeId === '2'">
+                <mat-form-field appearance="outline" fxFlex="33.33%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}"  *ngIf="!isLoading; else elseLoadingGridCol3">
+                  <mat-label>Select Room</mat-label>
+                  <mat-select [disabled]="isProcessing"
+                    formControlName="roomId"
+                    [(ngModel)]="userData.room.roomId">
+                    <mat-option *ngFor="let room of roomLookup" [value]="room.roomId">{{room.name}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <ng-template #loaderLookup>
+                  <div fxFlex="33.33%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}">
+                    <ngx-skeleton-loader fxFlex [theme]="{ height: '30px'}"></ngx-skeleton-loader>
+                  </div>
+                </ng-template>
+              </div>
               <div fxFlex="100" fxLayout="column" fxLayout.gt-sm="row">
+                <mat-form-field appearance="outline" fxFlex="33.33%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}"  *ngIf="!isLoading && this.userTypeId === 2" (click)="picker.open()">
+                  <mat-label>Birthdate</mat-label>
+                  <input
+                    matInput
+                    placeholder="Birthdate"
+                    formControlName="birthDate"
+                    [(ngModel)]="userData.birthDate"
+                    [matDatepicker]="picker">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-error *ngIf="getError('birthDate') !== (null || undefined)">{{
+                      (getError('birthDate') && getError('birthDate').required ? 'Please enter your birthdate' : '')
+                    }}</mat-error>
+                </mat-form-field>
+
                 <mat-form-field appearance="outline" fxFlex="33.33%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}" *ngIf="!isLoading; else elseLoadingGridCol3">
                   <mat-label>Select Gender</mat-label>
                   <mat-select [disabled]="isProcessing"

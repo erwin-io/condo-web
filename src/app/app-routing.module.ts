@@ -12,7 +12,7 @@ const routes: Routes = [
       canActivate: [AuthGuard],
       children: [
         { path: 'dashboard', canActivate: [AuthGuard], loadChildren: () => import('./pages/features/home/home.module').then(m => m.HomeModule) },
-        { path: 'configurations', canActivate: [AuthGuard], loadChildren: () => import('./pages/features/configuration/configuration.module').then(m => m.ConfigurationModule) },
+        { path: 'rooms', canActivate: [AuthGuard], loadChildren: () => import('./pages/features/rooms/rooms.module').then(m => m.RoomsModule) },
         { path: 'security', canActivate: [AuthGuard], loadChildren: () => import('./pages/features/security/security.module').then(m => m.SecurityModule) },
       ]
     },

@@ -25,7 +25,11 @@ export const routes: Routes = [
     component: ViewUserComponent
   },
   {
-    path: 'users/edit/:userId',
+    path: 'users/edit/staff/:userId',
+    component: EditUserComponent
+  },
+  {
+    path: 'users/edit/tenant/:userId',
     component: EditUserComponent
   }
 ];

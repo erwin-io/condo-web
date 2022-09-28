@@ -1,7 +1,7 @@
 <div class="page-view-container">
   <mat-card [ngClass]="{ 'hidden': isLoading }">
     <mat-card-header style="flex-direction:column">
-      <mat-card-subtitle>User</mat-card-subtitle>
+      <mat-card-subtitle>Accounts</mat-card-subtitle>
       <div style="display: flex!important;flex-grow: 1;column-gap:10px" >
         <button mat-button matTooltip="Show Stff" *ngIf="userTypeId !== 1" [routerLink]="'/security/users/staff/'" [disabled]="isProcessing">
           Staff

@@ -1,4 +1,5 @@
 import { Gender } from "./gender.model";
+import { Room } from "./room.model";
 import { User } from "./user.model";
 
 export class Tenant {
@@ -14,4 +15,5 @@ export class Tenant {
   age: string;
   gender: Gender;
   user: User;
+  roon: Room;
 }

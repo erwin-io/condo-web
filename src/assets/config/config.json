@@ -37,6 +37,7 @@
       "udpdateStaff": "users/staff",
       "toggleEnable": "users/toggleEnable"
     },
-    "role": "roles/"
+    "role": "roles/",
+    "room": "rooms/"
   }
 }

@@ -7,7 +7,7 @@
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #menu="matMenu" xPosition="before" >
-        <button mat-menu-item routerLink="/security/users/edit/{{userData.user.userId}}" *ngIf="!isLoading" >Edit</button>
+        <button mat-menu-item [routerLink]="(userData.user.userType.userTypeId === '1' ? '/security/users/edit/staff/' : '/security/users/edit/tenant/')+ userData.user.userId " *ngIf="!isLoading" >Edit</button>
         <button mat-menu-item *ngIf="!isLoading" (click)="toggleEnable(userData.user.userId)">{{userData.user.enable ? 'Disable user' : 'Enable user'}}</button>
       </mat-menu>
     </mat-card-header>
@@ -30,6 +30,20 @@
         </div>
       </div>
       <br>
+      <div fxFlex="100" fxLayout="column" fxLayoutAlign="start" *ngIf="!isLoading && userData.user.userType.userTypeId === '2'">
+        <div fxFlex="100" fxLayoutAlign="start">
+          <h4 class="group-info-text"><b>Room</b></h4>
+        </div>
+        <div fxLayout="column" class="group-info" fxLayoutAlign="start">
+          <div fxLayout="row" class="group-info">
+            <mat-icon>house</mat-icon>
+            <h3 class="group-info-text" *ngIf="!isLoading; else elseLoadingRoom">{{userData.room.name}}</h3>
+            <ng-template #elseLoadingRoom>
+              <ngx-skeleton-loader fxFlex [theme]="{ height: '20px', width: '20%'}"></ngx-skeleton-loader>
+            </ng-template>
+          </div>
+        </div>
+      </div>
       <div fxFlex="100" fxLayout="column" fxLayoutAlign="start">
         <div fxFlex="100" fxLayoutAlign="start">
           <h4 class="group-info-text"><b>Contact</b></h4>

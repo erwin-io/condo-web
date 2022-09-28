@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { Observable, Subscription } from 'rxjs';
+import { forkJoin, Observable, Subscription } from 'rxjs';
 import { Snackbar } from '../../../../../../app/core/ui/snackbar';
 import { MyErrorStateMatcher } from '../../../../../core/form-validation/error-state.matcher';
 import { AlertDialogModel } from '../../../../../../app/shared/alert-dialog/alert-dialog-model';
@@ -17,6 +17,8 @@ import { NavItem } from 'src/app/core/model/nav-item';
 import { menu } from 'src/app/core/model/menu';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { MatTableDataSource } from '@angular/material/table';
+import { Room } from 'src/app/core/model/room.model';
+import { RoomService } from 'src/app/core/services/room.service';
 @Component({
   selector: 'app-add-user',
   templateUrl: './add-user.component.html',
@@ -30,8 +32,11 @@ export class AddUserComponent implements OnInit {
   matcher = new MyErrorStateMatcher();
   isProcessing = false;
   isLoadingRoles = false;
+  isLoadingLookup = false;
   //roles
   roles:Role[] = [];
+  //lookup
+  roomLookup:Room[] = [];
   error;
   @ViewChild('roleInput', {static:false}) roleInput: ElementRef<HTMLInputElement>;
 
@@ -39,6 +44,7 @@ export class AddUserComponent implements OnInit {
     private formBuilder: FormBuilder,
     private userService: UserService,
     private roleService: RoleService,
+    private roomService: RoomService,
     private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute,
@@ -78,6 +84,7 @@ export class AddUserComponent implements OnInit {
           lastName: ['', [Validators.required, Validators.pattern("^[a-zA-Z0-9\\-\\s]+$")]],
           genderId: ['', Validators.required],
           birthDate: ['', Validators.required],
+          roomId: [null, Validators.required],
           email: ['',
           Validators.compose(
               [Validators.email, Validators.required])],
@@ -89,6 +96,7 @@ export class AddUserComponent implements OnInit {
           confirmPassword : '',
         }, { validators: this.checkPasswords });
       }
+      this.initLookup();
     }
 
   ngOnInit(): void {
@@ -101,6 +109,23 @@ export class AddUserComponent implements OnInit {
     const confirmPass = group.get('confirmPassword').value;
     return pass === confirmPass ? null : {notMatched:true} ;
   };
+
+  initLookup(){
+    this.isLoadingLookup = true;
+    forkJoin(
+      this.roomService.get()
+  ).subscribe(
+      ([getAllRooms]) => {
+          // do things
+          this.roomLookup = getAllRooms.data;
+      },
+      (error) => console.error(error),
+      () => {
+        ;
+        this.isLoadingLookup = false;
+      }
+  )
+  }
 
   initRoles(){
     try{

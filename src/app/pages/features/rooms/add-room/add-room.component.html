@@ -1,0 +1,56 @@
+<mat-progress-bar mode="query" *ngIf="isProcessing"></mat-progress-bar>
+<h4 mat-dialog-title>Add room type</h4>
+
+<div mat-dialog-content>
+  <div fxFlex="100" fxLayout="column" fxLayout="column">
+    <form [formGroup]="roomForm" (ngSubmit)="onSubmit()" fxLayout="column" id="roomForm" fxLayoutAlign="center" >
+      <fieldset fxFlex="100" fxLayout="column" [disabled]="isProcessing">
+        <mat-form-field appearance="outline">
+          <mat-label>Name</mat-label>
+          <input
+            matInput
+            placeholder="Name"
+            formControlName="name">
+            <mat-error *ngIf="getError('name') !== (null || undefined)">{{
+              (getError('name') && getError('name').required ? 'Please enter room name' : '')
+            }}</mat-error>
+        </mat-form-field>
+        <div fxFlex="100" class="cell" fxLayout="row" style="column-gap: 10px">
+          <mat-form-field appearance="outline" fxFlex="50%" class="cell">
+            <mat-label>Rate</mat-label>
+            <input
+              matInput
+              type="number"
+              placeholder="Rate"
+              formControlName="monthlyRate">
+              <mat-error *ngIf="getError('monthlyRate') !== (null || undefined)">{{
+                (getError('monthlyRate') && getError('monthlyRate').required ? 'Please enter rate' : '')
+              }}</mat-error>
+          </mat-form-field>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</div>
+
+<div mat-dialog-actions>
+  <div>
+    <button
+      mat-flat-button
+      [disabled]="isProcessing"
+      cdkFocusInitial
+      (click)="onDismiss()"
+    >
+      Cancel
+    </button>
+    <button
+      mat-flat-button
+      [disabled]="isProcessing || !roomForm.valid"
+      color="primary"
+      form="roomForm"
+      type="submit"
+    >
+      Save
+    </button>
+  </div>
+</div>

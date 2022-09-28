@@ -1,6 +1,6 @@
 import { AfterViewChecked, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { Observable, Subscription } from 'rxjs';
+import { forkJoin, Observable, Subscription } from 'rxjs';
 import { Snackbar } from '../../../../../../app/core/ui/snackbar';
 import { MyErrorStateMatcher } from '../../../../../core/form-validation/error-state.matcher';
 import { AlertDialogModel } from '../../../../../../app/shared/alert-dialog/alert-dialog-model';
@@ -19,6 +19,8 @@ import { NavItem } from 'src/app/core/model/nav-item';
 import { menu } from 'src/app/core/model/menu';
 import { Tenant } from 'src/app/core/model/tenant.model';
 import { MatTableDataSource } from '@angular/material/table';
+import { Room } from 'src/app/core/model/room.model';
+import { RoomService } from 'src/app/core/services/room.service';
 
 @Component({
   selector: 'app-edit-user',
@@ -37,6 +39,7 @@ export class EditUserComponent implements OnInit, AfterViewChecked  {
   isLoading = false;
   isProcessing = false;
   isLoadingRoles = false;
+  isLoadingLookup = false;
   //roles
   roles:Role[] = [];
   selectedRoles:string[] = [];
@@ -47,6 +50,9 @@ export class EditUserComponent implements OnInit, AfterViewChecked  {
   //end
   //access
   allowedAccess:string[] = [];
+  //lookup
+  roomLookup:Room[] = [];
+  userTypeId = 0;
 
   @ViewChild('roleInput', {static:false}) roleInput: ElementRef<HTMLInputElement>;
 
@@ -54,6 +60,7 @@ export class EditUserComponent implements OnInit, AfterViewChecked  {
     private formBuilder: FormBuilder,
     private userService: UserService,
     private roleService: RoleService,
+    private roomService: RoomService,
     private router: Router,
     private route: ActivatedRoute,
     private dialog: MatDialog,
@@ -67,19 +74,47 @@ export class EditUserComponent implements OnInit, AfterViewChecked  {
         this.snackBar.snackbarError("Invalid user, Cannot edit this user!");
         this.router.navigate(['/security/users/']);
       }
-      this.userForm = this.formBuilder.group({
-        firstName: ['', [Validators.required, Validators.pattern("^[a-zA-Z0-9\\-\\s]+$")]],
-        middleName: ['', Validators.pattern("^[a-zA-Z0-9\\-\\s]+$")],
-        lastName: ['', [Validators.required, Validators.pattern("^[a-zA-Z0-9\\-\\s]+$")]],
-        genderId: ['', Validators.required],
-        email: ['',
-        Validators.compose(
-            [Validators.email, Validators.required])],
-        mobileNumber: ['',
-            [Validators.minLength(11),Validators.maxLength(11), Validators.pattern("^[0-9]*$"), Validators.required]],
-        address: ['', Validators.required],
-        roleId : ['', Validators.required],
-      });
+      if (this.router.url.indexOf('staff') > -1) {
+        this.userTypeId = 1;
+      }
+      else if(this.router.url.indexOf('tenant') > -1){
+        this.userTypeId = 2;
+      }
+      else{
+        this.router.navigate(['/security/users/']);
+      }
+      if(this.userTypeId === 1){
+        this.userForm = this.formBuilder.group({
+          firstName: ['', [Validators.required, Validators.pattern("^[a-zA-Z0-9\\-\\s]+$")]],
+          middleName: ['', Validators.pattern("^[a-zA-Z0-9\\-\\s]+$")],
+          lastName: ['', [Validators.required, Validators.pattern("^[a-zA-Z0-9\\-\\s]+$")]],
+          genderId: ['', Validators.required],
+          email: ['',
+          Validators.compose(
+              [Validators.email, Validators.required])],
+          mobileNumber: ['',
+              [Validators.minLength(11),Validators.maxLength(11), Validators.pattern("^[0-9]*$"), Validators.required]],
+          address: ['', Validators.required],
+          roleId : ['', Validators.required],
+        });
+        this.initRoles();
+      }else{
+        this.userForm = this.formBuilder.group({
+          firstName: ['', [Validators.required, Validators.pattern("^[a-zA-Z0-9\\-\\s]+$")]],
+          middleName: ['', Validators.pattern("^[a-zA-Z0-9\\-\\s]+$")],
+          lastName: ['', [Validators.required, Validators.pattern("^[a-zA-Z0-9\\-\\s]+$")]],
+          genderId: ['', Validators.required],
+          birthDate: ['', Validators.required],
+          roomId: [null, Validators.required],
+          email: ['',
+          Validators.compose(
+              [Validators.email, Validators.required])],
+          mobileNumber: ['',
+              [Validators.minLength(11),Validators.maxLength(11), Validators.pattern("^[0-9]*$"), Validators.required]],
+          address: ['', Validators.required],
+        });
+      }
+      this.initLookup();
       this.initUser(userId);
   }
 
@@ -90,6 +125,22 @@ export class EditUserComponent implements OnInit, AfterViewChecked  {
 
   }
 
+  initLookup(){
+    this.isLoadingLookup = true;
+    forkJoin(
+      this.roomService.get()
+  ).subscribe(
+      ([getAllRooms]) => {
+          // do things
+          this.roomLookup = getAllRooms.data;
+      },
+      (error) => console.error(error),
+      () => {
+        ;
+        this.isLoadingLookup = false;
+      }
+  )
+  }
   async initUser(userId:string){
     this.isLoading = true;
     this.isProcessing = true;
@@ -190,6 +241,7 @@ export class EditUserComponent implements OnInit, AfterViewChecked  {
         return;
     }
 
+    const userData = this.formData;
     const dialogData = new AlertDialogModel();
     dialogData.title = 'Confirm';
     dialogData.message = 'Save role?';
@@ -213,8 +265,8 @@ export class EditUserComponent implements OnInit, AfterViewChecked  {
       dialogRef.componentInstance.isProcessing = this.isProcessing;
       try{
         this.isProcessing = true;
-        const userData = this.formData;
-        await this.userService.udpdateStaff(userData)
+        if(this.userTypeId === 1) {
+          await this.userService.udpdateStaff(userData)
           .subscribe(async res => {
             if (res.success) {
               this.snackBar.snackbarSuccess('Saved!');
@@ -236,6 +288,30 @@ export class EditUserComponent implements OnInit, AfterViewChecked  {
             this.snackBar.snackbarError(this.error);
             dialogRef.close();
           });
+        } else {
+          await this.userService.udpdateTenant(userData)
+          .subscribe(async res => {
+            if (res.success) {
+              this.snackBar.snackbarSuccess('Saved!');
+              this.router.navigate(['/security/users/details/' + res.data.user.userId]);
+              this.isProcessing = false;
+              dialogRef.componentInstance.isProcessing = this.isProcessing;
+              dialogRef.close();
+            } else {
+              this.isProcessing = false;
+              dialogRef.componentInstance.isProcessing = this.isProcessing;
+              this.error = Array.isArray(res.message) ? res.message[0] : res.message;
+              this.snackBar.snackbarError(this.error);
+              dialogRef.close();
+            }
+          }, async (err) => {
+            this.isProcessing = false;
+            dialogRef.componentInstance.isProcessing = this.isProcessing;
+            this.error = Array.isArray(err.message) ? err.message[0] : err.message;
+            this.snackBar.snackbarError(this.error);
+            dialogRef.close();
+          });
+        }
       } catch (e){
         this.isProcessing = false;
         dialogRef.componentInstance.isProcessing = this.isProcessing;

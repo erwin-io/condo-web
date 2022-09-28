@@ -48,6 +48,20 @@
                     }}</mat-error>
                 </mat-form-field>
               </div>
+              <div fxFlex="100" fxLayout="column" fxLayout.gt-sm="row" style="row-gap: 20px;" *ngIf="this.userTypeId === 2">
+                <mat-form-field appearance="outline" fxFlex="33.33%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}" *ngIf="!isLoadingLookup; else loaderLookup">
+                  <mat-label>Select Room</mat-label>
+                  <mat-select
+                    formControlName="roomId">
+                    <mat-option *ngFor="let room of roomLookup" [value]="room.roomId">{{room.name}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <ng-template #loaderLookup>
+                  <div fxFlex="33.33%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}">
+                    <ngx-skeleton-loader fxFlex [theme]="{ height: '30px'}"></ngx-skeleton-loader>
+                  </div>
+                </ng-template>
+              </div>
               <div fxFlex="100" fxLayout="column" fxLayout.gt-sm="row" style="row-gap: 20px;">
                 <mat-form-field appearance="outline" fxFlex="33.33%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}"  *ngIf="this.userTypeId === 2" (click)="picker.open()">
                   <mat-label>Birthdate</mat-label>
