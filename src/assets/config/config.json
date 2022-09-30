@@ -38,6 +38,22 @@
       "toggleEnable": "users/toggleEnable"
     },
     "role": "roles/",
-    "room": "rooms/"
+    "room": "rooms/",
+    "monthlyDues": {
+      "getByTenant": "monthly-dues/",
+      "getByYear": "monthly-dues/yearly",
+      "getSummaryByTenant": "monthly-dues/summary/",
+      "getById": "monthly-dues/",
+      "create": "monthly-dues/",
+      "update": "monthly-dues/",
+      "updatePayment": "monthly-dues/updatePayment"
+    },
+    "incidentReport": {
+      "get": "incidents-reports",
+      "getById": "incidents-reports/",
+      "create": "incidents-reports/",
+      "update": "incidents-reports/",
+      "updateStatus": "incidents-reports/updateStatus"
+    }
   }
 }

@@ -15,9 +15,9 @@ export let menu: NavItem[] = [
     isParent: false,
   },
   {
-    displayName: 'History',
-    iconName: 'history',
-    route: 'history',
+    displayName: 'Monthly Due',
+    iconName: 'today',
+    route: 'monthly-due',
     isParent: false,
   },
   {
