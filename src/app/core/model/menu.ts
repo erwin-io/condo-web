@@ -11,7 +11,7 @@ export let menu: NavItem[] = [
   {
     displayName: 'Incident Reports',
     iconName: 'report_problem',
-    route: 'incidents',
+    route: 'incident-report',
     isParent: false,
   },
   {

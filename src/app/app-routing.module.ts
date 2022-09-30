@@ -13,6 +13,8 @@ const routes: Routes = [
       children: [
         { path: 'dashboard', canActivate: [AuthGuard], loadChildren: () => import('./pages/features/home/home.module').then(m => m.HomeModule) },
         { path: 'rooms', canActivate: [AuthGuard], loadChildren: () => import('./pages/features/rooms/rooms.module').then(m => m.RoomsModule) },
+        { path: 'incident-report', canActivate: [AuthGuard], loadChildren: () => import('./pages/features/incident-report/incident-report.module').then(m => m.IncidentReportModule) },
+        { path: 'monthly-due', canActivate: [AuthGuard], loadChildren: () => import('./pages/features/monthly-due/monthly-due.module').then(m => m.MonthlyDueModule) },
         { path: 'security', canActivate: [AuthGuard], loadChildren: () => import('./pages/features/security/security.module').then(m => m.SecurityModule) },
       ]
     },
