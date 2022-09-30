@@ -15,5 +15,5 @@ export class Tenant {
   age: string;
   gender: Gender;
   user: User;
-  roon: Room;
+  room: Room;
 }

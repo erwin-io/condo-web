@@ -15,8 +15,8 @@ export class IncidentsReportsService implements IServices {
 
   constructor(private http: HttpClient, private appconfig: AppConfigService) { }
 
-  get(params: any): Observable<ApiResponse<IncidentReport[]>> {
-    return this.http.get<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.incidentReport.get,
+  getAll(params: { keyword: string }): Observable<ApiResponse<IncidentReport[]>> {
+    return this.http.get<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.incidentReport.getAll,
       {params}
       )
     .pipe(
@@ -24,6 +24,17 @@ export class IncidentsReportsService implements IServices {
       catchError(this.handleError('incidentReport', []))
     );
   }
+
+  getByTenant(params: { keyword: string; tenantId: string }): Observable<ApiResponse<IncidentReport[]>> {
+    return this.http.get<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.incidentReport.getByTenant,
+      {params}
+      )
+    .pipe(
+      tap(_ => this.log('incidentReport')),
+      catchError(this.handleError('incidentReport', []))
+    );
+  }
+
 
   getById(incidentReportId: string): Observable<ApiResponse<IncidentReport>> {
     return this.http.get<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.incidentReport.getById + incidentReportId)

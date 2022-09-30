@@ -49,7 +49,8 @@
       "updatePayment": "monthly-dues/updatePayment"
     },
     "incidentReport": {
-      "get": "incidents-reports",
+      "getAll": "incidents-reports/",
+      "getByTenant": "incidents-reports/findByTenant",
       "getById": "incidents-reports/",
       "create": "incidents-reports/",
       "update": "incidents-reports/",

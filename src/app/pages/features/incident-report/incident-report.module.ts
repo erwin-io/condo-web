@@ -6,6 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { MaterialModule } from 'src/app/material/material.module';
 import { IncidentReportComponent } from './incident-report.component';
+import { ReportDetailsComponent } from './report-details/report-details.component';
 
 export const routes: Routes = [
   {
@@ -18,6 +19,7 @@ export const routes: Routes = [
 @NgModule({
   declarations: [
     IncidentReportComponent,
+    ReportDetailsComponent,
   ],
   imports: [
     CommonModule,
