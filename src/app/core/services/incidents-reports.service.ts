@@ -60,7 +60,7 @@ export class IncidentsReportsService implements IServices {
     );
   }
 
-  updateStatus(data: any): Observable<ApiResponse<IncidentReport>> {
+  updateStatus(data: {incidentsReportId: string; incidentStatusId: string }): Observable<ApiResponse<IncidentReport>> {
     console.log(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.incidentReport.updateStatus);
     return this.http.put<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.incidentReport.updateStatus, data)
     .pipe(

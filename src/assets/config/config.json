@@ -40,8 +40,9 @@
     "role": "roles/",
     "room": "rooms/",
     "monthlyDues": {
-      "getByTenant": "monthly-dues/",
-      "getByYear": "monthly-dues/yearly",
+      "allTenant": "monthly-dues/allTenant",
+      "getByTenant": "monthly-dues/findByTenant",
+      "yearlyByTenant": "monthly-dues/yearlyByTenant",
       "getSummaryByTenant": "monthly-dues/summary/",
       "getById": "monthly-dues/",
       "create": "monthly-dues/",

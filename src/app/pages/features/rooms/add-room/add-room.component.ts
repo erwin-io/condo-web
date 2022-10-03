@@ -29,7 +29,7 @@ export class AddRoomComponent implements OnInit {
     private appconfig: AppConfigService,
     public dialogRef: MatDialogRef<AddRoomComponent>
   ) {
-    dialogRef.disableClose = true;
+    this.dialogRef.disableClose = true;
     this.roomForm = this.formBuilder.group({
         name: ['', Validators.required],
         monthlyRate: ['', Validators.required],

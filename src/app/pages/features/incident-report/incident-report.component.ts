@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Router } from 'express';
+import { Router } from '@angular/router';
 import { IncidentReport } from 'src/app/core/model/incident-report.model';
 import { IncidentsReportsService } from 'src/app/core/services/incidents-reports.service';
 import { Snackbar } from 'src/app/core/ui/snackbar';
@@ -18,6 +18,7 @@ export class IncidentReportView {
   title: string;
   tenantName: string;
   tenantRoomName: string;
+  incidentStatus: string;
 }
 
 @Component({
@@ -54,13 +55,13 @@ export class IncidentReportComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
-  async details(roomId: string){
+  async details(incidentsReportId: string){
 
     const dialogRef = this.dialog.open(ReportDetailsComponent, {
       closeOnNavigation: true,
       panelClass: 'report-details-dialog',
     });
-    // dialogRef.componentInstance.data = { roomId };
+    dialogRef.componentInstance.data = { incidentsReportId };
     dialogRef.componentInstance.conFirm.subscribe((data: boolean) => {
       if(data){
         dialogRef.close();
@@ -69,85 +70,22 @@ export class IncidentReportComponent implements OnInit {
     });
   }
 
-  // async remove(roomId: string){
-  //   const dialogData = new AlertDialogModel();
-  //   dialogData.title = 'Confirm';
-  //   dialogData.message = 'Delete room?';
-  //   dialogData.confirmButton = {
-  //     visible: true,
-  //     text: 'yes',
-  //     color: 'primary',
-  //   };
-  //   dialogData.dismissButton = {
-  //     visible: true,
-  //     text: 'cancel',
-  //   };
-  //   const dialogRef = this.dialog.open(AlertDialogComponent, {
-  //     maxWidth: '400px',
-  //     closeOnNavigation: true,
-  //   });
-
-  //   dialogRef.componentInstance.alertDialogConfig = dialogData;
-  //   dialogRef.componentInstance.conFirm.subscribe(async (confirm: any) => {
-  //     if(confirm) {
-  //       this.isProcessing = true;
-  //       dialogRef.componentInstance.isProcessing = this.isProcessing;
-  //       try {
-  //         this.roomService
-  //           .delete(roomId)
-  //           .subscribe(
-  //             async (res) => {
-  //               if (res.success) {
-  //                 this.getRooms();
-  //                 dialogRef.close();
-  //                 this.isProcessing = false;
-  //                 dialogRef.componentInstance.isProcessing = this.isProcessing;
-  //               } else {
-  //                 this.isProcessing = false;
-  //                 dialogRef.componentInstance.isProcessing = this.isProcessing;
-  //                 this.error = Array.isArray(res.message)
-  //                   ? res.message[0]
-  //                   : res.message;
-  //                 this.snackBar.snackbarError(this.error);
-  //               }
-  //             },
-  //             async (err) => {
-  //               this.isProcessing = false;
-  //               dialogRef.componentInstance.isProcessing = this.isProcessing;
-  //               this.error = Array.isArray(err.message)
-  //                 ? err.message[0]
-  //                 : err.message;
-  //               this.snackBar.snackbarError(this.error);
-  //             }
-  //           );
-  //       } catch (e) {
-  //         this.isProcessing = false;
-  //         dialogRef.componentInstance.isProcessing = this.isProcessing;
-  //         this.error = Array.isArray(e.message) ? e.message[0] : e.message;
-  //         this.snackBar.snackbarError(this.error);
-  //       }
-  //     }
-  //   });
-  // }
-
-  filter() {
-  }
-
   getAllReports(){
-    this.displayedColumns = ['incidentsReportId', 'date', 'title', 'tenantName', 'tenantRoomName', 'controls'];
+    this.displayedColumns = ['incidentsReportId', 'date', 'title', 'tenantName', 'tenantRoomName', 'incidentStatus', 'controls'];
     try{
       this.isLoading = true;
       this.incidentsReportsService.getAll({ keyword: this.keywordCtrl.value })
       .subscribe(async res => {
         if(res.success){
           this.data = res.data;
-          this.dataSource.data = this.data.map(x=> {
+          this.dataSource.data = <IncidentReportView[]>this.data.map(x=> {
             const report = new IncidentReportView();
             report.incidentsReportId = x.incidentsReportId;
             report.date = x.date;
             report.title = x.title;
             report.tenantName = x.tenant.fullName;
             report.tenantRoomName = x.tenant.room.name;
+            report.incidentStatus = x.incidentStatus.name;
             return report;
           });
           this.dataSource.paginator = this.paginator;

@@ -19,6 +19,7 @@ import { AppConfigService } from './core/services/app-config.service';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTimepickerModule } from './core/directive/mat-timepicker/src/lib/mat-timepicker.module';
+import { YearCalendarComponent } from './components/year-calendar/year-calendar.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { MatTimepickerModule } from './core/directive/mat-timepicker/src/lib/mat
     FormFieldErrorComponent,
     SnackbarComponent,
     AlertDialogComponent,
+    YearCalendarComponent,
   ],
   imports: [
     BrowserModule,

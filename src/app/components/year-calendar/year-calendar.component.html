@@ -1,0 +1,9 @@
+
+<div mat-dialog-content>
+<mat-calendar
+startView="multi-year"
+panelClass="year-picker"
+[selected]="data"
+(yearSelected)="yearSelectedHandler($event)"
+></mat-calendar>
+</div>

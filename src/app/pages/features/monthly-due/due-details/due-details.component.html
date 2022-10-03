@@ -1,0 +1,93 @@
+<div class="page-view-container">
+  <div fxFlex="100" fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="10px">
+    <mat-card fxFlex.gt-sm="30%" >
+      <mat-card-header>
+        <mat-card-subtitle>Summary</mat-card-subtitle>
+        <div fxFlex></div>
+      </mat-card-header>
+      <mat-card-content fxLayout="column" >
+        <div fxFlex="100" fxLayout="column" fxLayoutAlign="start">
+          <h3><strong>Current Due date</strong></h3>
+          <h3>{{summary.dueDate ? (summary.dueDate | date) : 'No  current due'}}</h3>
+          <h3><strong>No of Monts due</strong></h3>
+          <h3>{{summary.noOfMonthsDue}}</h3>
+          <h3><strong>Total due amount</strong></h3>
+          <h3>₱ {{summary.totalDue | number: '1.2-2'}}</h3>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card fxFlex.gt-sm="70%" >
+      <mat-card-header fxLayout="column">
+        <mat-card-subtitle>Monthly due</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content fxLayout="column" >
+        <div fxFlex="100" fxLayout="column" fxLayoutAlign="start">
+          <div fxLayout="column" [ngStyle.gt-xs]="{ width: '40%' }" *ngIf="!isLoading; else elseLoadingCalendarButton">
+            <mat-label >Filter by year</mat-label>
+            <mat-form-field appearance="outline" style="cursor: pointer;" (click)="selectYear()">
+              <mat-label>Year</mat-label>
+              <input matInput [formControl]="yearInputCtrl"  style="cursor: pointer;"  readonly>
+            </mat-form-field>
+          </div>
+          <ng-template #elseLoadingCalendarButton>
+            <ngx-skeleton-loader [theme]="{ height: '30px'}"></ngx-skeleton-loader>
+          </ng-template>
+          <div fxFlex>
+            <table mat-table [dataSource]="dataSourceDue" mat-table matSort [ngClass]="{ 'hidden': dataSourceDue.data.length === 0}">
+              <ng-container matColumnDef="monthlyDueId">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Id </th>
+                <td mat-cell *matCellDef="let element"> {{element.monthlyDueId}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="dueDate">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Due date </th>
+                <td mat-cell *matCellDef="let element"> {{element.dueDate | date}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="dueAmount">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Total due amount </th>
+                <td mat-cell *matCellDef="let element"> ₱{{element.dueAmount.toFixed(2)}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="amountPaid">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Amount paid </th>
+                <td mat-cell *matCellDef="let element"> {{element.amountPaid.toFixed(2)}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Payment Status </th>
+                <td mat-cell *matCellDef="let element"> <span [style]="{ 'color' : element.isPaid ? '#2dd36f' : '#eb445a' }"></span> {{element.status}} </td>
+              </ng-container>
+
+              <!-- <ng-container matColumnDef="controls">
+                <th mat-header-cell *matHeaderCellDef>  </th>
+                <td mat-cell *matCellDef="let element">
+                  <button matTooltip="More" mat-icon-button [matMenuTriggerFor]="menu" [disabled]="isProcessing">
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                  <mat-menu #menu="matMenu">
+                    <button matTooltip="Details" routerLink="/monthly-due/due-details/{{element.tenantId}}" mat-menu-item >Details</button>
+                  </mat-menu>
+                </td>
+              </ng-container> -->
+
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+
+            <div class="table-no-data" *ngIf="dataSourceDue.data.length === 0">
+              <span>No report available</span>
+            </div>
+            <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 50, 100]"
+                           showFirstLastButtons
+                           aria-label="Select page">
+            </mat-paginator>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

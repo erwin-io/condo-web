@@ -1,1 +1,77 @@
-<p>report-details works!</p>
+<mat-progress-bar mode="query" *ngIf="isLoading"></mat-progress-bar>
+<div fxLayout="row">
+  <h4 mat-dialog-title>Repor details</h4>
+  <div fxFlex></div>
+  <h4 fxmat-dialog-title *ngIf="!isLoading; else loadingDate">{{details.date | date}}</h4>
+  <ng-template #loadingDate>
+    <ngx-skeleton-loader fxFlex [theme]="{ height: '30px'}"></ngx-skeleton-loader>
+  </ng-template>
+</div>
+
+<div mat-dialog-content >
+  <div fxFlex="100" fxLayout="column" *ngIf="!isLoading; else loadingDetails">
+    <h3 mat-dialog-title><strong>Status :</strong> {{details.incidentStatus.name}}</h3>
+    <h3 mat-dialog-title><strong>From :</strong> {{details.tenant.fullName}}</h3>
+    <div fxFlex="100" fxLayout="column" >
+      <h3><strong>Title</strong></h3>
+      <h3>{{details.title}}</h3>
+    </div>
+    <div fxFlex="100" fxLayout="column" >
+      <h3><strong>Message</strong></h3>
+      <h3>{{details.message}}</h3>
+    </div>
+  </div>
+  <ng-template #loadingDetails>
+    <ngx-skeleton-loader fxFlex [theme]="{ height: '30px'}"></ngx-skeleton-loader>
+    <div fxFlex="100" fxLayout="column">
+      <h3 mat-dialog-title><strong>Status :</strong>
+        <ngx-skeleton-loader fxFlex [theme]="{ height: '30px'}"></ngx-skeleton-loader>
+      </h3>
+      <h3 mat-dialog-title><strong>From :</strong>
+        <ngx-skeleton-loader fxFlex [theme]="{ height: '30px'}"></ngx-skeleton-loader>
+      </h3>
+      <div fxFlex="100" fxLayout="column" >
+        <h3><strong>Title</strong></h3>
+        <h3><ngx-skeleton-loader fxFlex [theme]="{ height: '30px'}"></ngx-skeleton-loader></h3>
+      </div>
+      <div fxFlex="100" fxLayout="column" >
+        <h3><strong>Message</strong></h3>
+        <h3><ngx-skeleton-loader fxFlex [theme]="{ height: '30px'}"></ngx-skeleton-loader></h3>
+      </div>
+    </div>
+  </ng-template>
+</div>
+
+<div mat-dialog-actions>
+  <div fxLayout="row" fxLayoutGap="10px">
+    <button mat-stroked-button color="primary" [matMenuTriggerFor]="menu" aria-label="Select action" [style]="{ 'display' : !isLoading && details.incidentStatus.incidentStatusId === '1' ? 'block!important' : 'none!important'}">
+      <strong>Select action</strong>
+      <mat-icon>keyboard_arrow_down</mat-icon>
+    </button>
+    <button mat-stroked-button color="primary" *ngIf="!isLoading ? (details.incidentStatus.incidentStatusId === '2' ? true : false) : elseLoadingAction" (click)="onChangeStatus(3)">
+      <mat-icon>check_circle_outline</mat-icon>
+      <span>Close</span>
+    </button>
+    <ng-template #elseLoadingAction>
+      <ngx-skeleton-loader fxFlex [theme]="{ height: '30px'}"></ngx-skeleton-loader>
+    </ng-template>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item *ngIf="!isLoading && details.incidentStatus.incidentStatusId === '1'" (click)="onChangeStatus(2)">
+        <mat-icon>build</mat-icon>
+        <span>Investigate</span>
+      </button>
+      <button mat-menu-item (click)="onChangeStatus(3)">
+        <mat-icon>check_circle_outline</mat-icon>
+        <span>Close</span>
+      </button>
+    </mat-menu>
+    <button
+      mat-flat-button
+      [disabled]="isLoading"
+      cdkFocusInitial
+      (click)="onDismiss()"
+    >
+      Cancel
+    </button>
+  </div>
+</div>

@@ -1,3 +1,6 @@
+h1,h2,h3,h4,h5 {
+  margin: 0!important;
+}
 table{
   width: 100%;
  }
@@ -36,34 +39,29 @@ table{
    }
  }
 
- .mat-column-incidentsReportId {
-  flex: 0 0 5% !important;
-  width: 5% !important;
+ .mat-column-monthlyDueId {
+  flex: 0 0 10% !important;
+  width: 10% !important;
  }
 
- .mat-column-date {
-  flex: 0 0 15% !important;
-  width: 15% !important;
- }
-
- .mat-column-title {
+ .mat-column-dueDate {
   flex: 0 0 20% !important;
   width: 20% !important;
  }
 
- .mat-column-tenantName {
-  flex: 0 0 30% !important;
-  width: 30% !important;
+ .mat-column-dueAmount {
+  flex: 0 0 20% !important;
+  width: 20% !important;
  }
 
- .mat-column-tenantRoomName {
-  flex: 0 0 15% !important;
-  width: 15% !important;
+ .mat-column-amountPaid {
+  flex: 0 0 20% !important;
+  width: 20% !important;
  }
 
- .mat-column-incidentStatus {
-  flex: 0 0 15% !important;
-  width: 15% !important;
+ .mat-column-status {
+  flex: 0 0 20% !important;
+  width: 20% !important;
  }
 
  .mat-column-controls {
@@ -82,7 +80,7 @@ table{
   }
 }
 
-::ng-deep .report-details-dialog {
+::ng-deep .year-calendar-dialog {
   max-width: 500px!important;
   width: 500px!important;
 }

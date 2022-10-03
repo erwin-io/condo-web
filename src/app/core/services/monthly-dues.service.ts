@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, tap, catchError, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { ApiResponse } from '../model/api-response.model';
-import { MonthlyDues } from '../model/monthly-dues.model';
+import { MonthlyDues, TenantMonthlyDuesReport } from '../model/monthly-dues.model';
 import { AppConfigService } from './app-config.service';
 
 @Injectable({
@@ -12,6 +12,15 @@ import { AppConfigService } from './app-config.service';
 export class MonthlyDuesService {
 
   constructor(private http: HttpClient, private appconfig: AppConfigService) {}
+
+  getAllTenant(): Observable<ApiResponse<TenantMonthlyDuesReport[]>> {
+    return this.http
+      .get<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.monthlyDues.allTenant)
+      .pipe(
+        tap((_) => this.log('monthlyDues')),
+        catchError(this.handleError('monthlyDues', []))
+      );
+  }
 
   getByTenant(params: {tenantId: string }): Observable<ApiResponse<MonthlyDues[]>> {
     return this.http
@@ -25,10 +34,10 @@ export class MonthlyDuesService {
       );
   }
 
-  getByYear(params: {tenantId: string; year: number}): Observable<ApiResponse<MonthlyDues[]>> {
+  getByYearByTenant(params: {tenantId: string; year: number}): Observable<ApiResponse<MonthlyDues[]>> {
     return this.http
       .get<any>(
-        environment.apiBaseUrl + this.appconfig.config.apiEndPoints.monthlyDues.getByYear,
+        environment.apiBaseUrl + this.appconfig.config.apiEndPoints.monthlyDues.yearlyByTenant,
         {params}
       )
       .pipe(
@@ -51,7 +60,19 @@ export class MonthlyDuesService {
       );
   }
 
-  add(data: any): Observable<ApiResponse<MonthlyDues>> {
+  getSummaryByTenant(tenantId: string): Observable<ApiResponse<{ totalDue: number; monthsDue: MonthlyDues[] }>> {
+    return this.http
+      .get<any>(
+        environment.apiBaseUrl +
+          this.appconfig.config.apiEndPoints.monthlyDues.getSummaryByTenant + tenantId
+      )
+      .pipe(
+        tap((_) => this.log('monthlyDues')),
+        catchError(this.handleError('monthlyDues', []))
+      );
+  }
+
+  add(data: { dueDate: Date; generatedDate: Date; tenantId: string}): Observable<ApiResponse<MonthlyDues>> {
     return this.http
       .post<any>(
         environment.apiBaseUrl + this.appconfig.config.apiEndPoints.monthlyDues.create,

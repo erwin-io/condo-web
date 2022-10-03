@@ -10,3 +10,12 @@ export class MonthlyDues {
   markAsRead: boolean;
   tenant: Tenant;
 }
+
+
+export class TenantMonthlyDuesReport {
+  tenantId: string;
+  fullName: string;
+  totalDue: number;
+  dueDate: Date;
+  noOfMonthsDue: number;
+}
